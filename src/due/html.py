@@ -1,6 +1,7 @@
 import requests
 import joblib
 from due.cache import cache
+from flask import request
 
 
 def anime_to_html(releasing_outdated_anime):
@@ -134,6 +135,11 @@ def manga_to_html(releasing_outdated_manga):
 
 
 def page(main_content, footer):
+    message = '<blockquote>Slow loads? If your media hasn\'t been cached in a while, the first load will take a couple seconds longer than the rest. Subsequent requests on cached media should be faster. <a href="/?hide_message">Hide <i>forever</i></a></blockquote>'
+
+    if request.cookies.get("hide_message") == "1":
+        message = ""
+
     return f"""
 <!DOCTYPE html>
 <html>
@@ -160,7 +166,7 @@ def page(main_content, footer):
 
         <p>{footer}</p>
 
-        <blockquote>Slow loads? If your media hasn't been cached in a while, the first load will take a couple seconds longer than the rest. Subsequent requests on cached media should be faster.</blockquote>
+        {message}
     </body>
 </html>
 """

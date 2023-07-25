@@ -1,7 +1,7 @@
 import time
 from due.html import anime_to_html, manga_to_html, page
 from due.media import create_collection
-from flask import request, Blueprint
+from flask import make_response, redirect, request, Blueprint
 import json
 import os
 
@@ -10,6 +10,13 @@ bp = Blueprint("index", __name__)
 
 @bp.route("/")
 def home():
+    response = make_response("")
+
+    if request.args.get("hide_message") is not None:
+        if request.cookies.get("hide_message") is None:
+            response = redirect("/")
+            response.set_cookie("hide_message", "1")
+
     if request.cookies.get("anilist"):
         anilist = json.loads(request.cookies.get("anilist"))
         start = time.time()
@@ -49,11 +56,12 @@ def home():
         (anime_html, anime_length) = anime_to_html(releasing_outdated_anime)
         (manga_html, manga_length) = manga_to_html(releasing_outdated_manga)
 
-        return page(
-            f"""<a href="/auth/logout">Logout from AniList ({name})</a>
+        response.set_data(
+            page(
+                f"""<a href="/auth/logout">Logout from AniList ({name})</a>
 
             <br>""",
-            f"""<details open>
+                f"""<details open>
                 <summary>Anime [{anime_length}] <small style="opacity: 50%">{round(anime_time, 2)}ms</small></summary>
                 {anime_html}
             </details>
@@ -65,11 +73,16 @@ def home():
                 {manga_html}
             </details>
             """,
+            )
         )
     else:
-        return page(
-            f"""<a href="https://anilist.co/api/v2/oauth/authorize?client_id={os.getenv('ANILIST_CLIENT_ID')}&redirect_uri={os.getenv('ANILIST_REDIRECT_URI')}&response_type=code">Login with AniList</a>
+        response.set_data(
+            page(
+                f"""<a href="https://anilist.co/api/v2/oauth/authorize?client_id={os.getenv('ANILIST_CLIENT_ID')}&redirect_uri={os.getenv('ANILIST_REDIRECT_URI')}&response_type=code">Login with AniList</a>
 
             <br>""",
-            "Please log in to view due media.",
+                "Please log in to view due media.",
+            )
         )
+
+    return response
