@@ -60,7 +60,7 @@ def home():
 
             <p></p>
 
-            <details open>
+            <details closed>
             <summary>Manga [{manga_length}] <small style="opacity: 50%">{round(manga_time, 2)}ms</small></summary>
                 {manga_html}
             </details>
