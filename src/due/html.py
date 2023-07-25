@@ -119,18 +119,22 @@ def manga_to_html(releasing_outdated_manga):
                         )
                     )
 
-            if str(progress) == str(available):
-                titles.pop()
-
-                return
-
         # Useful when debugging
-        # if str(available)[0].isdigit():
+        # if str(available)[0] == "?":
         #     titles.pop()
 
         #     return
 
         if str(available)[0] == "{":
+            titles.pop()
+
+            return
+
+        if str(available)[0].isdigit():
+            print(title, available)
+            available = math.floor(float(available))
+
+        if str(progress) == str(available):
             titles.pop()
 
             return
