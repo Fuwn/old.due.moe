@@ -159,6 +159,8 @@ def page(main_content, footer):
         <hr>
 
         <p>{footer}</p>
+
+        <blockquote>Slow loads? If your media hasn't been cached in a while, the first load will take a couple seconds longer than the rest. Subsequent requests on cached media should be faster.</blockquote>
     </body>
 </html>
 """
