@@ -3,10 +3,20 @@ import joblib
 from due.cache import cache
 from flask import request
 import math
+import re
+
+
+def seen(element):
+    match = re.search(r"\s(\d+)\s", element)
+
+    if match:
+        return int(match.group(1))
+    else:
+        return 0
 
 
 def anime_to_html(releasing_outdated_anime):
-    current_html = "<ul>"
+    current_html = []
     ids = []
 
     for media in releasing_outdated_anime:
@@ -32,13 +42,20 @@ def anime_to_html(releasing_outdated_anime):
         if title is None:
             title = anime["title"]["romaji"]
 
-        current_html += f'<li><a href="https://anilist.co/anime/{id}" target="_blank">{title}</a> {progress} [{available}]</li>'
+        current_html.append(
+            f'<li><a href="https://anilist.co/anime/{id}" target="_blank">{title}</a> {progress} [{available}]</li>'
+        )
 
-    return (current_html + "</ul>", len(ids))
+    current_html = sorted(current_html, key=seen, reverse=True)
+
+    current_html.insert(0, "<ul>")
+    current_html.append("</ul>")
+
+    return ("".join(current_html), len(ids))
 
 
 def manga_to_html(releasing_outdated_manga):
-    current_html = ["<ul>"]
+    current_html = []
     ids = []
 
     def process(media):
@@ -162,6 +179,9 @@ def manga_to_html(releasing_outdated_manga):
         joblib.delayed(process)(media) for media in releasing_outdated_manga
     )
 
+    current_html = sorted(current_html, key=seen, reverse=True)
+
+    current_html.insert(0, "<ul>")
     current_html.append("</ul>")
 
     return ("".join(current_html), len(ids))
