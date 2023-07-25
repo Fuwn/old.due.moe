@@ -31,7 +31,7 @@ def anime_to_html(releasing_outdated_anime):
         if title is None:
             title = anime["title"]["romaji"]
 
-        current_html += f'<li><a href="https://anilist.co/anime/{id}">{title}</a> {progress} [{available}]</li>'
+        current_html += f'<li><a href="https://anilist.co/anime/{id}" target="_blank">{title}</a> {progress} [{available}]</li>'
 
     return (current_html + "</ul>", len(titles))
 
@@ -121,7 +121,7 @@ def manga_to_html(releasing_outdated_manga):
         )
 
         current_html.append(
-            f'<li><a href="https://anilist.co/manga/{id}">{title}</a> {progress} [{available_link}]</li>'
+            f'<li><a href="https://anilist.co/manga/{id}" target="_blank">{title}</a> {progress} [{available_link}]</li>'
         )
 
     # 80
