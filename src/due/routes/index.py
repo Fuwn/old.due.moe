@@ -21,6 +21,20 @@ def home():
             response = redirect("/")
             response.set_cookie("hide_message", "1")
 
+    # print(
+    #     requests.post(
+    #         "https://anilist.co/api/v2/oauth/token",
+    #         data={
+    #             "grant_type": "refresh_token",
+    #             "client_id": os.getenv("ANILIST_CLIENT_ID"),
+    #             "client_secret": os.getenv("ANILIST_CLIENT_SECRET"),
+    #             "refresh_token": json.loads(request.cookies.get("anilist"))[
+    #                 "refresh_token"
+    #             ],
+    #         },
+    #     ).json()
+    # )
+
     if request.cookies.get("anilist"):
         anilist = json.loads(request.cookies.get("anilist"))
         start = time.time()
