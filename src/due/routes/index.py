@@ -21,23 +21,8 @@ def home():
         anilist = json.loads(request.cookies.get("anilist"))
         start = time.time()
         (current_anime, name) = create_collection(anilist, "ANIME")
-        anime_time = time.time() - start
-        start = time.time()
-        (current_manga, _) = create_collection(anilist, "MANGA")
-        manga_time = time.time() - start
-
         releasing_anime = [
             media for media in current_anime if media["media"]["status"] == "RELEASING"
-        ]
-        releasing_manga = [
-            media for media in current_manga if media["media"]["status"] == "RELEASING"
-        ]
-        releasing_outdated_manga = [
-            media
-            for media in releasing_manga
-            if media["media"]["type"] == "MANGA"
-            and int(media["media"]["mediaListEntry"]["progress"])
-            >= 1  # Useful when testing
         ]
         releasing_outdated_anime = [
             media
@@ -54,7 +39,21 @@ def home():
             != int(media["media"]["mediaListEntry"]["progress"])
         ]
         (anime_html, anime_length) = anime_to_html(releasing_outdated_anime)
+        anime_time = time.time() - start
+        start = time.time()
+        (current_manga, _) = create_collection(anilist, "MANGA")
+        releasing_manga = [
+            media for media in current_manga if media["media"]["status"] == "RELEASING"
+        ]
+        releasing_outdated_manga = [
+            media
+            for media in releasing_manga
+            if media["media"]["type"] == "MANGA"
+            and int(media["media"]["mediaListEntry"]["progress"])
+            >= 1  # Useful when testing
+        ]
         (manga_html, manga_length) = manga_to_html(releasing_outdated_manga)
+        manga_time = time.time() - start
 
         response.set_data(
             page(
