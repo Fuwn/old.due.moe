@@ -7,18 +7,18 @@ import math
 
 def anime_to_html(releasing_outdated_anime):
     current_html = "<ul>"
-    titles = []
+    ids = []
 
     for media in releasing_outdated_anime:
         anime = media["media"]
         title = anime["title"]["english"]
-
-        if title in titles:
-            continue
-        else:
-            titles.append(title)
-
         id = anime["id"]
+
+        if id in ids:
+            return
+        else:
+            ids.append(id)
+
         progress = anime["mediaListEntry"]["progress"]
         available = (
             {"episode": 0}
@@ -34,7 +34,7 @@ def anime_to_html(releasing_outdated_anime):
 
         current_html += f'<li><a href="https://anilist.co/anime/{id}" target="_blank">{title}</a> {progress} [{available}]</li>'
 
-    return (current_html + "</ul>", len(titles))
+    return (current_html + "</ul>", len(ids))
 
 
 def manga_to_html(releasing_outdated_manga):
@@ -44,13 +44,13 @@ def manga_to_html(releasing_outdated_manga):
     def process(media):
         manga = media["media"]
         title = manga["title"]["english"]
+        id = manga["id"]
 
-        if manga["id"] in ids:
+        if id in ids:
             return
         else:
-            ids.append(manga["id"])
+            ids.append(id)
 
-        id = manga["id"]
         progress = manga["mediaListEntry"]["progress"]
         available = (
             {"episode": 0}
