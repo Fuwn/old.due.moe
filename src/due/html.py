@@ -123,7 +123,8 @@ def manga_to_html(releasing_outdated_manga):
             f'<li><a href="https://anilist.co/manga/{id}">{title}</a> {progress} [{available_link}]</li>'
         )
 
-    joblib.Parallel(n_jobs=80, require="sharedmem")(
+    # 80
+    joblib.Parallel(n_jobs=4, require="sharedmem")(
         joblib.delayed(process)(media) for media in releasing_outdated_manga
     )
 
