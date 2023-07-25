@@ -2,6 +2,7 @@ import requests
 import joblib
 from due.cache import cache
 from flask import request
+import math
 
 
 def anime_to_html(releasing_outdated_anime):
@@ -106,12 +107,32 @@ def manga_to_html(releasing_outdated_manga):
                 except Exception:
                     available = "?"
 
+                if not str(available)[0].isdigit():
+                    if len(manga_chapter_aggregate["volumes"]) == 0:
+                        titles.pop()
+
+                        return
+
+                    available = math.floor(
+                        float(
+                            list(manga_chapter_aggregate["volumes"]["1"]["chapters"])[0]
+                        )
+                    )
+
             if str(progress) == str(available):
                 titles.pop()
 
                 return
 
+        # Useful when debugging
+        # if str(available)[0].isdigit():
+        #     titles.pop()
+
+        #     return
+
         if str(available)[0] == "{":
+            titles.pop()
+
             return
 
         available_link = (
