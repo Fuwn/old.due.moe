@@ -39,16 +39,16 @@ def anime_to_html(releasing_outdated_anime):
 
 def manga_to_html(releasing_outdated_manga):
     current_html = ["<ul>"]
-    titles = []
+    ids = []
 
     def process(media):
         manga = media["media"]
         title = manga["title"]["english"]
 
-        if title in titles:
+        if manga["id"] in ids:
             return
         else:
-            titles.append(title)
+            ids.append(manga["id"])
 
         id = manga["id"]
         progress = manga["mediaListEntry"]["progress"]
@@ -72,6 +72,15 @@ def manga_to_html(releasing_outdated_manga):
                 "https://api.mangadex.org/manga",
                 params={"title": title, "year": manga["startDate"]["year"]},
             ).json()["data"]
+
+            if len(mangadex_data) == 0:
+                mangadex_data = requests.get(
+                    "https://api.mangadex.org/manga",
+                    params={
+                        "title": manga["title"]["romaji"],
+                        "year": manga["startDate"]["year"],
+                    },
+                ).json()["data"]
 
             cache.set(str(manga["id"]) + "id", mangadex_data)
 
@@ -109,7 +118,7 @@ def manga_to_html(releasing_outdated_manga):
 
                 if not str(available)[0].isdigit():
                     if len(manga_chapter_aggregate["volumes"]) == 0:
-                        titles.pop()
+                        ids.pop()
 
                         return
 
@@ -120,22 +129,21 @@ def manga_to_html(releasing_outdated_manga):
                     )
 
         # Useful when debugging
-        # if str(available)[0] == "?":
-        #     titles.pop()
+        # if str(available)[0] != "?":
+        #     ids.pop()
 
         #     return
 
         if str(available)[0] == "{":
-            titles.pop()
+            ids.pop()
 
             return
 
         if str(available)[0].isdigit():
-            print(title, available)
             available = math.floor(float(available))
 
         if str(progress) == str(available):
-            titles.pop()
+            ids.pop()
 
             return
 
@@ -156,7 +164,7 @@ def manga_to_html(releasing_outdated_manga):
 
     current_html.append("</ul>")
 
-    return ("".join(current_html), len(titles))
+    return ("".join(current_html), len(ids))
 
 
 def page(main_content, footer):
