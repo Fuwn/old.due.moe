@@ -209,7 +209,7 @@ def page(main_content, footer):
     <body>
         <style>text-align: center;</style>
 
-        <h1>期限</h1>
+        <h1><a href="/">期限</a></h1>
 
         {main_content}
 
