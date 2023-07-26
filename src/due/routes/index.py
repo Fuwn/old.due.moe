@@ -11,10 +11,10 @@ bp = Blueprint("index", __name__)
 @bp.route("/")
 def home():
     response = make_response("")
-    disable_manga = False
+    disable_manga = True
 
-    if request.args.get("hide_manga") is not None:
-        disable_manga = True
+    if request.args.get("show_manga") is not None:
+        disable_manga = False
 
     if request.args.get("hide_message") is not None:
         if request.cookies.get("hide_message") is None:
@@ -59,7 +59,7 @@ def home():
         (anime_html, anime_length) = anime_to_html(releasing_outdated_anime)
         anime_time = time.time() - start
         start = time.time()
-        manga_body = ""
+        manga_body = '<a href="/?show_manga">Show manga</a>'
 
         if not disable_manga:
             (current_manga, _) = create_collection(anilist, "MANGA")
@@ -81,7 +81,7 @@ def home():
             <p></p>
 
             <details closed>
-            <summary>Manga [{manga_length}] <small style="opacity: 50%">{round(manga_time, 2)}s</small> <a href="/?hide_manga">Hide temporarily</a></summary>
+            <summary>Manga [{manga_length}] <small style="opacity: 50%">{round(manga_time, 2)}s</small></summary>
                 {manga_html}
             </details>
             """
