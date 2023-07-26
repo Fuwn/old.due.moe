@@ -42,6 +42,11 @@ def anime_to_html(releasing_outdated_anime):
         if title is None:
             title = anime["title"]["romaji"]
 
+        if request.cookies.get("show_missing") is not None and str(available)[0] == "?":
+            ids.pop()
+
+            continue
+
         current_html.append(
             f'<li><a href="https://anilist.co/anime/{id}" target="_blank">{title}</a> {progress} [{available}]</li>'
         )
@@ -54,7 +59,7 @@ def anime_to_html(releasing_outdated_anime):
     return ("".join(current_html), len(ids))
 
 
-def manga_to_html(releasing_outdated_manga):
+def manga_to_html(releasing_outdated_manga, show_missing):
     current_html = []
     ids = []
 
@@ -144,6 +149,11 @@ def manga_to_html(releasing_outdated_manga):
                             list(manga_chapter_aggregate["volumes"]["1"]["chapters"])[0]
                         )
                     )
+
+        if show_missing is not None and str(available)[0] == "?":
+            ids.pop()
+
+            return
 
         # Useful when debugging
         # if str(available)[0] != "?":
