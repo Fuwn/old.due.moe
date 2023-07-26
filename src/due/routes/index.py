@@ -12,7 +12,6 @@ bp = Blueprint("index", __name__)
 def home():
     response = make_response("")
     disable_manga = True
-    show_missing = False
 
     if request.args.get("show_manga") is not None:
         disable_manga = False
@@ -24,14 +23,13 @@ def home():
             response.set_cookie("hide_message", "1")
 
     if request.args.get("toggle_missing") is not None:
-        if request.cookies.get("show_missing") is None:
-            response = redirect("/")
-            show_missing = True
+        response = redirect(
+            f"/{'?show_manga' if request.args.get('show_manga') is not None else ''}"
+        )
 
+        if request.cookies.get("show_missing") is None:
             response.set_cookie("show_missing", "1")
         else:
-            response = redirect("/")
-
             response.delete_cookie("show_missing")
 
     # print(
@@ -106,7 +104,7 @@ def home():
                 f"""<a href="/auth/logout">Logout from AniList ({name})</a>
 
             <br>""",
-                f"""<a href=\"/?toggle_missing\">{'Show' if request.cookies.get('show_missing') else 'Hide'} missing</a><p></p><details open>
+                f"""<a href=\"/?toggle_missing{'&show_manga' if request.args.get('show_manga') is not None else ''}\">{'Show' if request.cookies.get('show_missing') else 'Hide'} unresolved</a><p></p><details open>
                 <summary>Anime [{anime_length}] <small style="opacity: 50%">{round(anime_time, 2)}s</small></summary>
                 {anime_html}
             </details>
