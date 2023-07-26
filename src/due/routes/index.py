@@ -49,7 +49,10 @@ def home():
     if request.cookies.get("anilist"):
         anilist = json.loads(request.cookies.get("anilist"))
         start = time.time()
-        (current_anime, name) = create_collection(anilist, "ANIME")
+        (current_anime, name) = create_collection(
+            anilist, "ANIME", request.args.get("username")
+        )
+
         releasing_anime = [
             media for media in current_anime if media["media"]["status"] == "RELEASING"
         ]
@@ -73,7 +76,9 @@ def home():
         manga_body = '<a href="/?show_manga">Show manga</a>'
 
         if not disable_manga:
-            (current_manga, _) = create_collection(anilist, "MANGA")
+            (current_manga, _) = create_collection(
+                anilist, "MANGA", request.args.get("username")
+            )
             releasing_manga = [
                 media
                 for media in current_manga

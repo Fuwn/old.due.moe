@@ -15,8 +15,21 @@ def user_id(anilist):
     )
 
 
-def create_collection(anilist, type):
-    current_collection = media_list_collection(anilist, type)
+def user_name_to_id(name):
+    return int(
+        requests.post(
+            "https://graphql.anilist.co",
+            json={"query": f'{{ User(name: "{name}") {{ id }} }}'},
+            headers={
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+        ).json()["data"]["User"]["id"]
+    )
+
+
+def create_collection(anilist, type, username=None):
+    current_collection = media_list_collection(anilist, type, username)
     current = []
 
     for list in current_collection["MediaListCollection"]["lists"]:
@@ -56,10 +69,15 @@ def create_collection(anilist, type):
 #     }}"""
 
 
-def media_list_collection(anilist, type):
+def media_list_collection(anilist, type, username=None):
     return requests.post(
         "https://graphql.anilist.co",
-        json={"query": media_list_collection_query(user_id(anilist), type)},
+        json={
+            "query": media_list_collection_query(
+                user_id(anilist) if username is None else user_name_to_id(username),
+                type,
+            )
+        },
         headers={
             "Authorization": anilist["token_type"] + " " + anilist["access_token"],
             "Content-Type": "application/json",
