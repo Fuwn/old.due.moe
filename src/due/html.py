@@ -78,6 +78,7 @@ def manga_to_html(releasing_outdated_manga, show_missing):
         manga = media["media"]
         title = manga["title"]["native"]
         id = manga["id"]
+        previous_volume_largest_chapter = 0
 
         if id in ids:
             return
@@ -138,6 +139,14 @@ def manga_to_html(releasing_outdated_manga, show_missing):
                 cache.set(str(manga["id"]) + "ag", manga_chapter_aggregate)
 
             if "none" in manga_chapter_aggregate["volumes"]:
+                previous_volume_largest_chapter = list(
+                    manga_chapter_aggregate["volumes"][
+                        str(
+                            dict(enumerate(manga_chapter_aggregate["volumes"])).get(1)
+                            or "none"
+                        )
+                    ]["chapters"]
+                )[0]
                 available = list(
                     manga_chapter_aggregate["volumes"]["none"]["chapters"]
                 )[0]
@@ -150,7 +159,7 @@ def manga_to_html(releasing_outdated_manga, show_missing):
                 try:
                     available = list(
                         manga_chapter_aggregate["volumes"][
-                            str(len(list(manga_chapter_aggregate["volumes"])))
+                            str(list(manga_chapter_aggregate["volumes"])[0])
                         ]["chapters"]
                     )[0]
                 except Exception:
@@ -186,6 +195,9 @@ def manga_to_html(releasing_outdated_manga, show_missing):
 
         if str(available)[0].isdigit():
             available = math.floor(float(available))
+
+            if math.floor(float(previous_volume_largest_chapter)) > available:
+                available = math.floor(float(previous_volume_largest_chapter))
 
         if int(progress) >= int(available):
             ids.pop()
