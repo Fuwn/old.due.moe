@@ -5,13 +5,16 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from due.cache import cache
 import os
+import logging
 
 load_dotenv()
 
 app = Flask(__name__)
+log = logging.getLogger("werkzeug")
 
 CORS(app)
 
+log.setLevel(logging.ERROR)
 app.register_blueprint(auth.bp, url_prefix="/auth")
 app.register_blueprint(oauth.bp, url_prefix="/oauth")
 app.register_blueprint(index.bp)
