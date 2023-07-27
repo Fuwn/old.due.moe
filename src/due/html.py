@@ -133,7 +133,7 @@ def manga_to_html(releasing_outdated_manga, show_missing):
                 try:
                     available = list(
                         manga_chapter_aggregate["volumes"][
-                            str(len(list(manga_chapter_aggregate["volumes"])) - 1)
+                            str(len(list(manga_chapter_aggregate["volumes"])))
                         ]["chapters"]
                     )[0]
                 except Exception:
