@@ -53,6 +53,8 @@ def home():
             anilist, "ANIME", request.args.get("username")
         )
 
+        print(name)
+
         releasing_anime = [
             media for media in current_anime if media["media"]["status"] == "RELEASING"
         ]
