@@ -170,7 +170,7 @@ def manga_to_html(releasing_outdated_manga, show_missing):
         if str(available)[0].isdigit():
             available = math.floor(float(available))
 
-        if str(progress) == str(available):
+        if int(progress) >= int(available):
             ids.pop()
 
             return
