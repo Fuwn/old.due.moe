@@ -4,6 +4,7 @@ from due.cache import cache
 from flask import request
 import math
 import re
+import os
 
 
 def seen(element):
@@ -184,8 +185,7 @@ def manga_to_html(releasing_outdated_manga, show_missing):
             f'<li><a href="https://anilist.co/manga/{id}" target="_blank">{title}</a> {progress} [{available_link}]</li>'
         )
 
-    # 80
-    joblib.Parallel(n_jobs=4, require="sharedmem")(
+    joblib.Parallel(n_jobs=int(os.getenv("CONCURRENT_JOBS")) or 4, require="sharedmem")(
         joblib.delayed(process)(media) for media in releasing_outdated_manga
     )
 
