@@ -7,11 +7,21 @@ import re
 import os
 
 
-def seen(element):
-    match = re.search(r"\s(\d+)\s", element)
+def seen(element, manga=False):
+    matches = re.findall(r"\d+\]|\[\d+", element)
 
-    if match:
-        return int(match.group(1))
+    if manga:
+        matches = re.search(r"\[<a.*?>(\d+)<\/a>\]", element)
+
+        if matches:
+            return int(matches.group(1))
+        else:
+            return 0
+
+    if len(matches) > 1:
+        return int(matches[1].strip("[]"))
+    elif len(matches) == 1:
+        return int(matches[0].strip("[]"))
     else:
         return 0
 
@@ -189,7 +199,7 @@ def manga_to_html(releasing_outdated_manga, show_missing):
         joblib.delayed(process)(media) for media in releasing_outdated_manga
     )
 
-    current_html = sorted(current_html, key=seen, reverse=True)
+    current_html = sorted(current_html, key=lambda x: seen(x, manga=True), reverse=True)
 
     current_html.insert(0, "<ul>")
     current_html.append("</ul>")
