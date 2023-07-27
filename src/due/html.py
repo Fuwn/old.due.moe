@@ -199,7 +199,7 @@ def manga_to_html(releasing_outdated_manga, show_missing):
         )
 
         current_html.append(
-            f'<li><a href="https://anilist.co/manga/{id}" target="_blank">{title}</a> {progress} [{available_link}]</li>'
+            f'<li><a href="https://anilist.co/manga/{id}" target="_blank">{manga["title"]["english"] or manga["title"]["romaji"] or title}</a> {progress} [{available_link}]</li>'
         )
 
     joblib.Parallel(n_jobs=int(os.getenv("CONCURRENT_JOBS")) or 4, require="sharedmem")(
