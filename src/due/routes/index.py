@@ -1,6 +1,6 @@
 import time
 from due.html import anime_to_html, manga_to_html, page
-from due.media import create_collection, last_activity, user_name_to_id
+from due.media import create_collection, last_activity, user_id, user_name_to_id
 from flask import make_response, redirect, request, Blueprint
 import json
 import os
@@ -49,6 +49,14 @@ def home():
 
     if request.cookies.get("anilist"):
         anilist = json.loads(request.cookies.get("anilist"))
+
+        if user_id(anilist) == -1:
+            response = redirect("/")
+
+            response.delete_cookie("anilist")
+
+            return response
+
         start = time.time()
         (current_anime, name) = create_collection(
             anilist, "ANIME", request.args.get("username")

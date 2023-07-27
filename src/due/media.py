@@ -2,17 +2,20 @@ import requests
 
 
 def user_id(anilist):
-    return int(
-        requests.post(
-            "https://graphql.anilist.co",
-            json={"query": "{ Viewer { id } }"},
-            headers={
-                "Authorization": anilist["token_type"] + " " + anilist["access_token"],
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-            },
-        ).json()["data"]["Viewer"]["id"]
-    )
+    viewer = requests.post(
+        "https://graphql.anilist.co",
+        json={"query": "{ Viewer { id } }"},
+        headers={
+            "Authorization": anilist["token_type"] + " " + anilist["access_token"],
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+    ).json()["data"]["Viewer"]
+
+    if viewer is None:
+        return -1
+
+    return int(viewer["id"])
 
 
 def last_activity(id):
