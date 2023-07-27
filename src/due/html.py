@@ -76,7 +76,7 @@ def manga_to_html(releasing_outdated_manga, show_missing):
 
     def process(media):
         manga = media["media"]
-        title = manga["title"]["english"]
+        title = manga["title"]["native"]
         id = manga["id"]
 
         if id in ids:
@@ -94,9 +94,6 @@ def manga_to_html(releasing_outdated_manga, show_missing):
         if available <= 0:
             available = "?"
 
-        if title is None:
-            title = manga["title"]["romaji"]
-
         mangadex_data = cache.get(str(manga["id"]) + "id")
         mangadex_id = None
 
@@ -106,6 +103,7 @@ def manga_to_html(releasing_outdated_manga, show_missing):
                 params={"title": title, "year": manga["startDate"]["year"]},
             ).json()["data"]
 
+            # This is very stupid. It should never get this far, anyway.
             if len(mangadex_data) == 0:
                 mangadex_data = requests.get(
                     "https://api.mangadex.org/manga",
@@ -114,6 +112,15 @@ def manga_to_html(releasing_outdated_manga, show_missing):
                         "year": manga["startDate"]["year"],
                     },
                 ).json()["data"]
+
+                if len(mangadex_data) == 0:
+                    mangadex_data = requests.get(
+                        "https://api.mangadex.org/manga",
+                        params={
+                            "title": manga["title"]["romaji"],
+                            "year": manga["startDate"]["year"],
+                        },
+                    ).json()["data"]
 
             cache.set(str(manga["id"]) + "id", mangadex_data)
 

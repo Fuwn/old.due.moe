@@ -96,7 +96,7 @@ def media_list_collection_query(user_id: int, type) -> str:
                         id
                         status
                         type
-                        title {{ romaji english }}
+                        title {{ romaji english native }}
                         nextAiringEpisode {{ episode }}
                         mediaListEntry {{ progress }}
                         startDate {{ year }}
