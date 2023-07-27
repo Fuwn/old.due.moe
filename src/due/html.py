@@ -8,20 +8,31 @@ import os
 
 
 def seen(element, manga=False):
-    matches = re.findall(r"\d+\]|\[\d+", element)
+    read = 0
 
     if manga:
-        matches = re.search(r"\[<a.*?>(\d+)<\/a>\]", element)
+        available_matches = re.search(r"\[<a.*?>(\d+)<\/a>\]", element)
+        read_matches = re.search(r"\[<a.*?>(?=\d+)<\/a>\]", element)
 
-        if matches:
-            return int(matches.group(1))
+        if read_matches:
+            read = int(read_matches.group())
+            print(read)
+
+        if available_matches:
+            return int(available_matches.group(1)) - read
         else:
             return 0
 
-    if len(matches) > 1:
-        return int(matches[1].strip("[]"))
-    elif len(matches) == 1:
-        return int(matches[0].strip("[]"))
+    available_matches = re.findall(r"\d+\]|\[\d+", element)
+    read_matches = re.search(r"\s(\d+)\s", element)
+
+    if read_matches:
+        read = int(read_matches.group(1))
+
+    if len(available_matches) > 1:
+        return int(available_matches[1].strip("[]")) - read
+    elif len(available_matches) == 1:
+        return int(available_matches[0].strip("[]")) - read
     else:
         return 0
 
@@ -62,7 +73,7 @@ def anime_to_html(releasing_outdated_anime):
             f'<li><a href="https://anilist.co/anime/{id}" target="_blank">{title}</a> {progress} [{available}]</li>'
         )
 
-    current_html = sorted(current_html, key=seen, reverse=True)
+    current_html = sorted(current_html, key=seen)
 
     current_html.insert(0, "<ul>")
     current_html.append("</ul>")
@@ -218,7 +229,7 @@ def manga_to_html(releasing_outdated_manga, show_missing):
         joblib.delayed(process)(media) for media in releasing_outdated_manga
     )
 
-    current_html = sorted(current_html, key=lambda x: seen(x, manga=True), reverse=True)
+    current_html = sorted(current_html, key=lambda x: seen(x, manga=True))
 
     current_html.insert(0, "<ul>")
     current_html.append("</ul>")
