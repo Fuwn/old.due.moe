@@ -15,6 +15,23 @@ def user_id(anilist):
     )
 
 
+def last_activity(id):
+    return int(
+        requests.post(
+            "https://graphql.anilist.co",
+            json={
+                "query": f"""{{ Activity(userId: {id}, type: MEDIA_LIST, sort: ID_DESC) {{
+                    __typename ... on ListActivity {{ createdAt }}
+                }} }}"""
+            },
+            headers={
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+        ).json()["data"]["Activity"]["createdAt"]
+    )
+
+
 def user_name_to_id(name):
     return int(
         requests.post(

@@ -1,9 +1,10 @@
 import time
 from due.html import anime_to_html, manga_to_html, page
-from due.media import create_collection
+from due.media import create_collection, last_activity, user_name_to_id
 from flask import make_response, redirect, request, Blueprint
 import json
 import os
+import datetime
 
 bp = Blueprint("index", __name__)
 
@@ -109,8 +110,8 @@ def home():
         response.set_data(
             page(
                 f"""<a href="/auth/logout">Logout from AniList ({name})</a>
-
-            <br>""",
+                {"<p></p><p>You don't have any new activity statuses from the past day! Create one to keep your streak!</p>" if datetime.datetime.fromtimestamp(last_activity(user_name_to_id(name))).date()
+            != datetime.date.today() else "<p></p>"}""",
                 f"""<a href=\"/?toggle_missing{'&show_manga' if request.args.get('show_manga') is not None else ''}\">{'Show' if request.cookies.get('show_missing') else 'Hide'} unresolved</a><p></p><details open>
                 <summary>Anime [{anime_length}] <small style="opacity: 50%">{round(anime_time, 2)}s</small></summary>
                 {anime_html}
