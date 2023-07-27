@@ -210,7 +210,7 @@ def manga_to_html(releasing_outdated_manga, show_missing):
             if math.floor(float(previous_volume_largest_chapter)) > available:
                 available = math.floor(float(previous_volume_largest_chapter))
 
-        if int(progress) >= int(available):
+        if str(available) != "?" and int(progress) >= int(available):
             ids.pop()
 
             return
