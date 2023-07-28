@@ -9,8 +9,13 @@ import datetime
 bp = Blueprint("index", __name__)
 
 
-@bp.route("/")
-def home():
+@bp.route("/<username>")
+def user(username):
+    return home(username)
+
+
+@bp.route("/", defaults={"username": None})
+def home(username):
     response = make_response("")
     disable_manga = True
 
@@ -59,7 +64,7 @@ def home():
 
         start = time.time()
         (current_anime, name) = create_collection(
-            anilist, "ANIME", request.args.get("username")
+            anilist, "ANIME", request.args.get("username") or username
         )
 
         print(name)
