@@ -99,7 +99,9 @@ def home():
                 media
                 for media in releasing_manga
                 if media["media"]["type"] == "MANGA"
-                and int(media["media"]["mediaListEntry"]["progress"])
+                and int(
+                    (media["media"]["mediaListEntry"] or {"progress": 0})["progress"]
+                )
                 >= 1  # Useful when testing
             ]
             (manga_html, manga_length) = manga_to_html(
