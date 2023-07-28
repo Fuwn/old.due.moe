@@ -49,11 +49,11 @@ def anime_to_html(releasing_outdated_anime):
         id = anime["id"]
 
         if id in ids:
-            return
+            continue
         else:
             ids.append(id)
 
-        progress = anime["mediaListEntry"]["progress"]
+        progress = (anime["mediaListEntry"] or {"progress": 0})["progress"]
         available = (
             {"episode": 0}
             if media["media"]["nextAiringEpisode"] is None

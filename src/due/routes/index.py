@@ -79,7 +79,7 @@ def home():
                 )["episode"]
             )
             - 1
-            != int(media["media"]["mediaListEntry"]["progress"])
+            != int((media["media"]["mediaListEntry"] or {"progress": 0})["progress"])
         ]
         (anime_html, anime_length) = anime_to_html(releasing_outdated_anime)
         anime_time = time.time() - start
