@@ -24,10 +24,10 @@ def seen(element, manga=False):
             return 0
 
     available_matches = re.findall(r"\d+\]|\[\d+", element)
-    read_matches = re.search(r"\s(\d+)\s", element)
+    seen_matches = re.search(r"\s(\d+)/((\d+)|(\?))\s", element)
 
-    if read_matches:
-        read = int(read_matches.group(1))
+    if seen_matches:
+        read = int(seen_matches.group(1))
 
     if len(available_matches) > 1:
         return int(available_matches[1].strip("[]")) - read
@@ -69,8 +69,13 @@ def anime_to_html(releasing_outdated_anime):
 
             continue
 
+        episodes = anime["episodes"]
+        total_html = (
+            "" if episodes is None else f'<span style="opacity: 50%">/{episodes}</span>'
+        )
+
         current_html.append(
-            f'<li><a href="https://anilist.co/anime/{id}" target="_blank">{title}</a> {progress} [{available}]</li>'
+            f'<li><a href="https://anilist.co/anime/{id}" target="_blank">{title}</a> {progress}{total_html} [{available}]</li>'
         )
 
     current_html = sorted(current_html, key=seen)

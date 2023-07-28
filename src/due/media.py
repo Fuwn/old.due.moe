@@ -116,6 +116,7 @@ def media_list_collection_query(user_id: int, type) -> str:
                         id
                         status
                         type
+                        episodes
                         title {{ romaji english native }}
                         nextAiringEpisode {{ episode }}
                         mediaListEntry {{ progress }}
