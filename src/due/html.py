@@ -24,7 +24,9 @@ def seen(element, manga=False):
             return 0
 
     available_matches = re.findall(r"\d+\]|\[\d+", element)
-    seen_matches = re.search(r"\s(\d+)/((\d+)|(\?))\s", element)
+    seen_matches = re.search(
+        r"\s(\d+)*?(<span style=\"opacity: 50%\">/(\d+)</span>)*\s", element
+    )
 
     if seen_matches:
         read = int(seen_matches.group(1))
