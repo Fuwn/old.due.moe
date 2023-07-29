@@ -6,6 +6,34 @@ import os
 from .utilities import seen
 
 
+def rerequest(manga, year):
+    mangadex_data = requests.get(
+        "https://api.mangadex.org/manga",
+        params={"title": manga["title"]["native"], "year": year},
+    ).json()["data"]
+
+    # This is very stupid. It should never get this far, anyway.
+    if len(mangadex_data) == 0:
+        mangadex_data = requests.get(
+            "https://api.mangadex.org/manga",
+            params={
+                "title": manga["title"]["romaji"],
+                "year": year,
+            },
+        ).json()["data"]
+
+        if len(mangadex_data) == 0:
+            mangadex_data = requests.get(
+                "https://api.mangadex.org/manga",
+                params={
+                    "title": manga["title"]["romaji"],
+                    "year": year,
+                },
+            ).json()["data"]
+
+    return mangadex_data
+
+
 def manga_to_html(releasing_outdated_manga, show_missing):
     current_html = []
     ids = []
@@ -35,29 +63,7 @@ def manga_to_html(releasing_outdated_manga, show_missing):
         mangadex_id = None
 
         if mangadex_data is None:
-            mangadex_data = requests.get(
-                "https://api.mangadex.org/manga",
-                params={"title": title, "year": manga["startDate"]["year"]},
-            ).json()["data"]
-
-            # This is very stupid. It should never get this far, anyway.
-            if len(mangadex_data) == 0:
-                mangadex_data = requests.get(
-                    "https://api.mangadex.org/manga",
-                    params={
-                        "title": manga["title"]["romaji"],
-                        "year": manga["startDate"]["year"],
-                    },
-                ).json()["data"]
-
-                if len(mangadex_data) == 0:
-                    mangadex_data = requests.get(
-                        "https://api.mangadex.org/manga",
-                        params={
-                            "title": manga["title"]["romaji"],
-                            "year": manga["startDate"]["year"],
-                        },
-                    ).json()["data"]
+            mangadex_data = rerequest(manga, manga["startDate"]["year"])
 
             cache.set(str(manga["id"]) + "id", mangadex_data)
 
