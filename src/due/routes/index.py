@@ -127,7 +127,7 @@ def home(username):
 
         response.set_data(
             page(
-                f"""<a href="/auth/logout">Logout from AniList ({name})</a>
+                f"""<a href="/auth/logout">Log out from AniList ({name})</a>
                 {"<p></p><p>You don't have any new activity statuses from the past day! Create one to keep your streak!</p>" if datetime.datetime.fromtimestamp(last_activity(user_name_to_id(name))).date()
             != datetime.date.today() else "<p></p>"}""",
                 f"""<a href=\"/?toggle_missing{'&show_manga' if request.args.get('show_manga') is not None else ''}\">{'Show' if request.cookies.get('show_missing') else 'Hide'} unresolved</a><p></p><details open>
@@ -141,7 +141,7 @@ def home(username):
     else:
         response.set_data(
             page(
-                f"""<a href="https://anilist.co/api/v2/oauth/authorize?client_id={os.getenv('ANILIST_CLIENT_ID')}&redirect_uri={os.getenv('ANILIST_REDIRECT_URI')}&response_type=code">Login with AniList</a>
+                f"""<a href="https://anilist.co/api/v2/oauth/authorize?client_id={os.getenv('ANILIST_CLIENT_ID')}&redirect_uri={os.getenv('ANILIST_REDIRECT_URI')}&response_type=code">Log in with AniList</a>
 
             <br>""",
                 "Please log in to view due media.",
