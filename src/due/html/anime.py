@@ -40,7 +40,7 @@ def anime_to_html(releasing_outdated_anime):
         )
 
         current_html.append(
-            f'<li><a href="https://anilist.co/anime/{id}" target="_blank">{title}</a> {progress}{total_html} [{available}]</li>'
+            f'<li><a href="https://anilist.co/anime/{id}" target="_blank">{title}</a> {progress}{total_html} <a href="/anilist/increment?id={id}&progress={progress + 1}">+</a> [{available}]</li>'
         )
 
     current_html = sorted(current_html, key=seen)

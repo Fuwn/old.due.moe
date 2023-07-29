@@ -1,5 +1,5 @@
 from flask import Flask
-from due.routes import auth, oauth, index
+from due.routes import auth, oauth, index, anilist
 from due.html.utilities import page
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -18,6 +18,7 @@ log.setLevel(logging.ERROR)
 app.register_blueprint(auth.bp, url_prefix="/auth")
 app.register_blueprint(oauth.bp, url_prefix="/oauth")
 app.register_blueprint(index.bp)
+app.register_blueprint(anilist.bp, url_prefix="/anilist")
 app.secret_key = os.getenv("SECRET_KEY")
 
 
