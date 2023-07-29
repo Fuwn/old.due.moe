@@ -1,6 +1,6 @@
 from flask import Flask
 from due.routes import auth, oauth, index
-from due.html import page
+from due.html.utilities import page
 from flask_cors import CORS
 from dotenv import load_dotenv
 from due.cache import cache

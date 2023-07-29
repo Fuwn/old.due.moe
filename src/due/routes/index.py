@@ -1,6 +1,9 @@
 import time
-from due.html import anime_to_html, manga_to_html, page
-from due.media import create_collection, last_activity, user_id, user_name_to_id
+from due.html.utilities import page
+from due.html.anime import anime_to_html
+from due.html.manga import manga_to_html
+from due.anilist.collection import create_collection
+from due.anilist.utilities import last_activity, user_id, user_name_to_id
 from flask import make_response, redirect, request, Blueprint
 import json
 import os
