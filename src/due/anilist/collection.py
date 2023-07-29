@@ -1,5 +1,5 @@
 import requests
-from .utilities import user_id
+from .utilities import user_id, user_name_to_id
 
 
 def create_collection(anilist, type, username=None):
