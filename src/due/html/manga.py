@@ -119,7 +119,7 @@ def manga_to_html(releasing_outdated_manga, show_missing):
                         )
                     )
 
-        if show_missing is not None and str(available)[0] == "?":
+        if show_missing is None and str(available)[0] == "?":
             ids.pop()
 
             return

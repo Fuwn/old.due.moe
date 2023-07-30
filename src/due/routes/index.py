@@ -130,7 +130,7 @@ def home(username):
                 f"""<a href="/auth/logout">Log out from AniList ({name})</a>
                 {"<p></p><p>You don't have any new activity statuses from the past day! Create one to keep your streak!</p>" if datetime.datetime.fromtimestamp(last_activity(user_name_to_id(name))).date()
             != datetime.date.today() else "<p></p>"}""",
-                f"""<a href=\"/?toggle_missing{'&show_manga' if request.args.get('show_manga') is not None else ''}\">{'Show' if request.cookies.get('show_missing') else 'Hide'} unresolved</a><p></p><details open>
+                f"""<a href=\"/?toggle_missing{'&show_manga' if request.args.get('show_manga') is not None else ''}\">{'Hide' if request.cookies.get('show_missing') else 'Show'} unresolved</a><p></p><details open>
                 <summary>Anime [{anime_length}] <small style="opacity: 50%">{round(anime_time, 2)}s</small></summary>
                 {anime_html}
             </details>

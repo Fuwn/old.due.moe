@@ -29,7 +29,7 @@ def anime_to_html(releasing_outdated_anime):
         if title is None:
             title = anime["title"]["romaji"]
 
-        if request.cookies.get("show_missing") is not None and str(available)[0] == "?":
+        if request.cookies.get("show_missing") is None and str(available)[0] == "?":
             ids.pop()
 
             continue
