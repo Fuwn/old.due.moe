@@ -35,12 +35,32 @@ def anime_to_html(releasing_outdated_anime):
             continue
 
         episodes = anime["episodes"]
+        airing_at = media["media"]["nextAiringEpisode"]["timeUntilAiring"]
+
+        if airing_at is not None:
+            hours = airing_at / 3600
+
+            if hours >= 24:
+                available = (
+                    str(available)
+                    + f'] <span style="opacity: 50%">{available + 1} in ~{int(round(hours // 24, 0))} days'
+                )
+            else:
+                available = (
+                    str(available)
+                    + f'] <span style="opacity: 50%">{available + 1} in ~{int(round(hours, 0))} hours'
+                )
+
+            available = str(available) + "</span>"
+        else:
+            available = str(available) + "]"
+
         total_html = (
             "" if episodes is None else f'<span style="opacity: 50%">/{episodes}</span>'
         )
 
         current_html.append(
-            f'<li><a href="https://anilist.co/anime/{id}" target="_blank">{title}</a> {progress}{total_html} <a href="/anilist/increment?id={id}&progress={progress + 1}">+</a> [{available}]</li>'
+            f'<li><a href="https://anilist.co/anime/{id}" target="_blank">{title}</a> {progress}{total_html} <a href="/anilist/increment?id={id}&progress={progress + 1}">+</a> [{available}</li>'
         )
 
     current_html = sorted(current_html, key=seen)

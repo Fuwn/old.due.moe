@@ -41,7 +41,7 @@ def media_list_collection_query(user_id: int, type) -> str:
                         type
                         episodes
                         title {{ romaji english native }}
-                        nextAiringEpisode {{ episode }}
+                        nextAiringEpisode {{ episode timeUntilAiring }}
                         mediaListEntry {{ progress }}
                         startDate {{ year }}
                     }}
