@@ -4,6 +4,7 @@ from due.cache import cache
 import math
 import os
 from .utilities import seen
+from flask import request
 
 
 def rerequest(manga, year):
@@ -37,6 +38,7 @@ def rerequest(manga, year):
 def manga_to_html(releasing_outdated_manga, show_missing):
     current_html = []
     ids = []
+    disable_outbound_links = request.args.get("outbound_links") is None
 
     def process(media):
         manga = media["media"]
@@ -148,7 +150,7 @@ def manga_to_html(releasing_outdated_manga, show_missing):
 
         available_link = (
             available
-            if mangadex_id is None
+            if mangadex_id is None or disable_outbound_links
             else f'<a href="https://mangadex.org/title/{mangadex_id}">{available}</a>'
         )
 
