@@ -41,14 +41,22 @@ def anime_to_html(releasing_outdated_anime):
             hours = airing_at / 3600
 
             if hours >= 24:
-                available = (
-                    str(available)
-                    + f'] <span style="opacity: 50%">{available + 1} in ~{int(round(hours // 24, 0))} days'
-                )
+                weeks = (hours // 24) // 7
+
+                if weeks >= 1:
+                    available = (
+                        str(available)
+                        + f'] <span style="opacity: 50%">{available + 1} in {int(round(weeks, 0))} week{"" if weeks == 1 else "s"}'
+                    )
+                else:
+                    available = (
+                        str(available)
+                        + f'] <span style="opacity: 50%">{available + 1} in {int(round(hours // 24, 0))} day{"" if hours // 24 == 1 else "s"}'
+                    )
             else:
                 available = (
                     str(available)
-                    + f'] <span style="opacity: 50%">{available + 1} in ~{int(round(hours, 0))} hours'
+                    + f'] <span style="opacity: 50%">{available + 1} in {int(round(hours, 0))} hour{"" if hours // 24 == 1 else "s"}'
                 )
 
             available = str(available) + "</span>"
