@@ -35,7 +35,7 @@ def anime_to_html(releasing_outdated_anime):
             continue
 
         episodes = anime["episodes"]
-        airing_at = media["media"]["nextAiringEpisode"]["timeUntilAiring"]
+        airing_at = (media["media"]["nextAiringEpisode"] or {"timeUntilAiring": None})["timeUntilAiring"]
 
         if airing_at is not None:
             hours = airing_at / 3600
