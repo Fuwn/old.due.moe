@@ -101,7 +101,7 @@ def home(username):
             releasing_manga = [
                 media
                 for media in current_manga
-                if media["media"]["status"] == "RELEASING"
+                if media["media"]["status"] == "RELEASING" and media["media"]["format"] != "NOVEL"
             ]
             releasing_outdated_manga = [
                 media
