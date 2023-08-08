@@ -6,15 +6,14 @@ def seen(element, manga=False):
     read = 0
 
     if manga:
-        available_matches = re.search(r"\[<a.*?>(\d+)<\/a>\]", element)
-        read_matches = re.search(r"\[<a.*?>(?=\d+)<\/a>\]", element)
+        available_matches = re.search(r"\[<a href=\".*\">(\d+)</a>\]|\[(\d+)\]", element)
+        read_matches = re.search(r"</a> (\d+) <a href=\"/anilist", element)
 
         if read_matches:
-            read = int(read_matches.group())
-            print(read)
+            read = int(read_matches.group(1))
 
         if available_matches:
-            return int(available_matches.group(1)) - read
+            return int(available_matches.group(1) or re.sub(r"[\[\]]", '', available_matches.group(0))) - read
         else:
             return 0
 
