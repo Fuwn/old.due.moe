@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from due.cache import cache
 import os
 import logging
+import traceback
 
 load_dotenv()
 
@@ -28,7 +29,7 @@ def error_handler(e):
         """<p>You have encountered a critcal application error. This means that one or more media entries on your lists have resolved abnormaly.</p>
         <p></p>
         <p>Contact <a href="https://anilist.co/user/fuwn">Fuwn</a> on AniList for help; please, attach the error code below.</p>""",
-        f"<pre>{e}</pre>",
+        f"<pre>{traceback.format_exc()}</pre>",
     )
 
 
